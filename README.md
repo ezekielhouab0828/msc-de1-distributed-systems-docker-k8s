@@ -1,91 +1,159 @@
-# Flask Sample App with Tests
+Distributed Systems – Docker, KIND & Kubernetes
+MSc DE1 – Projet académique
+Auteur : Ezekiel Houabaloukou
 
-This is a simple Flask web application with unit tests. The application provides a basic REST API for managing a list of items. It serves as a starting point for learning how to create a Flask application and write tests for it.
+📌 Badges
+https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white
+https://img.shields.io/badge/Kubernetes-326CE5?style=for-the-badge&logo=kubernetes&logoColor=white
+https://img.shields.io/badge/Python-3.10-blue?style=for-the-badge&logo=python
+https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask
+https://img.shields.io/badge/KIND-000000?style=for-the-badge
+https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github
 
-## Project Structure
+🚀 Introduction
+Ce projet met en œuvre une application Flask conteneurisée et déployée dans un cluster Kubernetes local via KIND.
+Il illustre les concepts fondamentaux des systèmes distribués :
 
-The project is organized as follows:
+Conteneurisation (Docker)
 
-- `app/`: Contains the Flask application and routes.
-- `tests/`: Houses unit tests for the application.
-- `run.py`: A script to run the Flask application.
+Orchestration (Kubernetes)
 
-## Getting Started
+Scaling automatique
 
-To get the Flask app up and running on your local machine, follow these steps:
+Rolling updates
 
-1. **Clone the Repository:**
+Reverse proxy (Ingress)
 
-   ```bash
-   git clone <repository_url>
-   cd flask_sample_app
-   ```
+Sécurité (SBOM + Trivy)
 
-2. **Set Up a Virtual Environment:**
+CI/CD local (build → load → deploy)
 
-   It's recommended to create a virtual environment to isolate project dependencies.
+🏗️ Architecture du projet
+Code
+                         ┌──────────────────────────┐
+                         │        Client Web         │
+                         └──────────────┬───────────┘
+                                        │
+                                        ▼
+                          ┌──────────────────────────┐
+                          │      Ingress (Traefik)   │
+                          └──────────────┬───────────┘
+                                        │
+                                        ▼
+                         ┌──────────────────────────┐
+                         │   Service (ClusterIP)     │
+                         └──────────────┬───────────┘
+                                        │
+                                        ▼
+                         ┌──────────────────────────┐
+                         │ Deployment (Flask App)   │
+                         │   • Pods (replicas)      │
+                         │   • Rolling updates      │
+                         └──────────────────────────┘
+📁 Structure du projet
+Code
+.
+├── app/                     # Application Flask
+│   ├── static/
+│   ├── templates/
+│   ├── app.py
+│   ├── config.py
+│   └── requirements.txt
+│
+├── docker/
+│   ├── Dockerfile
+│   └── compose.yaml
+│
+├── k8s/
+│   ├── namespace.yaml
+│   ├── deployment.yaml
+│   ├── service.yaml
+│   └── ingress.yaml
+│
+├── kind/
+│   └── kind-config.yaml
+│
+├── security/
+│   ├── sbom.json
+│   ├── trivy-report.txt
+│   └── flask-sample-app.tar
+│
+├── urls.txt
+└── README.md
+🐳 Docker
+🔨 Build
+Code
+docker build -t flask-sample-app:latest .
+▶️ Run
+Code
+docker run -p 5000:5000 flask-sample-app
+🧩 Compose
+Code
+docker compose up --build
+☸️ Kubernetes avec KIND
+1️⃣ Créer le cluster
+Code
+kind create cluster --config kind/kind-config.yaml
+2️⃣ Charger l’image dans KIND
+Code
+kind load docker-image flask-sample-app:latest
+3️⃣ Déployer
+Code
+kubectl apply -f k8s/namespace.yaml
+kubectl apply -f k8s/deployment.yaml
+kubectl apply -f k8s/service.yaml
+kubectl apply -f k8s/ingress.yaml
+4️⃣ Vérifier
+Code
+kubectl get pods -n flask-app
+kubectl get svc -n flask-app
+kubectl get ingress -n flask-app
+🔄 Rolling Update
+Modifier dans deployment.yaml :
 
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows, use venv\Scripts\activate
-   ```
+Code
+image: flask-sample-app:v2
+Puis :
 
-3. **Install Dependencies:**
+Code
+kubectl apply -f k8s/deployment.yaml
+kubectl rollout status deployment flask-app -n flask-app
+🛡️ Sécurité
+Le dossier security/ contient :
 
-   Install the necessary dependencies using `pip`:
+SBOM généré via Syft
 
-   ```bash
-   pip install -r requirements.txt
-   ```
+Scan Trivy (vulnérabilités)
 
-4. **Run the Application:**
+Archive du projet (flask-sample-app.tar)
 
-   Start the Flask application:
+🌐 URLs demandées
+Code
+GitHub : https://github.com/ezekielhouab0828/msc-de1-distributed-systems-docker-k8s
+Docker Hub : https://hub.docker.com/r/<ton_user>/flask-sample-app
+Ingress local : http://localhost/
+🧪 Tests
+Code
+pytest
+📚 Technologies
+Python 3.10
 
-   ```bash
-   python run.py
-   ```
+Flask
 
-   The app will be available at [http://localhost:5000](http://localhost:5000).
+Docker
 
-5. **Run Tests:**
+KIND
 
-   To run the unit tests, execute the following command:
+Kubernetes
 
-   ```bash
-   python -m unittest discover tests
-   ```
+Trivy
 
-   This command will discover and run all tests in the `tests` directory.
+Syft
 
-## Application Routes
+YAML
 
-The application provides the following routes:
+GitHub
 
-- `GET /`: Returns a simple greeting message.
-- `GET /items`: Returns a list of items.
-- `GET /items/{item_id}`: Returns the details of a specific item.
-- `POST /items`: Adds a new item to the list.
-
-## Testing
-
-Unit tests are provided in the `tests` directory. They cover the basic functionality of the application, including route handling and response validation. You can use these tests as a reference to write your own tests or to verify the correctness of the application.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Contribute
-
-Feel free to contribute to this project by opening issues or submitting pull requests. We welcome any improvements, bug fixes, or additional features.
-
-## Author
-
-- Pan Luo
-
-## Acknowledgments
-
-- This project was created as a sample Flask application for educational purposes.
-- Special thanks to the Flask community for providing a fantastic web framework.
-
-Enjoy experimenting with the Flask sample app! If you have any questions or need further assistance, please don't hesitate to reach out.
+👨‍💻 Auteur
+Ezekiel Houabaloukou  
+MSc Data Engineering – 2026
