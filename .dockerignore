@@ -1,0 +1,29 @@
+# Git
+.git/
+.gitignore
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+venv/
+.venv/
+
+# IDE / éditeurs
+.vscode/
+.idea/
+*.swp
+
+# Docker / Kubernetes / rapports
+kind/
+k8s/
+security/
+evidence/
+*.md
+*.pdf
+
+# Logs / outputs
+logs/
+*.log
