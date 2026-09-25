@@ -2,14 +2,6 @@ Distributed Systems – Docker, KIND & Kubernetes
 MSc DE1 – Projet académique
 Auteur : Ezekiel Houabaloukou
 
-📌 Badges
-https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white
-https://img.shields.io/badge/Kubernetes-326CE5?style=for-the-badge&logo=kubernetes&logoColor=white
-https://img.shields.io/badge/Python-3.10-blue?style=for-the-badge&logo=python
-https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask
-https://img.shields.io/badge/KIND-000000?style=for-the-badge
-https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github
-
 🚀 Introduction
 Ce projet met en œuvre une application Flask conteneurisée et déployée dans un cluster Kubernetes local via KIND.
 Il illustre les concepts fondamentaux des systèmes distribués :
@@ -22,35 +14,13 @@ Scaling automatique
 
 Rolling updates
 
-Reverse proxy (Ingress)
+Reverse proxy via Ingress
 
 Sécurité (SBOM + Trivy)
 
 CI/CD local (build → load → deploy)
 
-🏗️ Architecture du projet
-Code
-                         ┌──────────────────────────┐
-                         │        Client Web         │
-                         └──────────────┬───────────┘
-                                        │
-                                        ▼
-                          ┌──────────────────────────┐
-                          │      Ingress (Traefik)   │
-                          └──────────────┬───────────┘
-                                        │
-                                        ▼
-                         ┌──────────────────────────┐
-                         │   Service (ClusterIP)     │
-                         └──────────────┬───────────┘
-                                        │
-                                        ▼
-                         ┌──────────────────────────┐
-                         │ Deployment (Flask App)   │
-                         │   • Pods (replicas)      │
-                         │   • Rolling updates      │
-                         └──────────────────────────┘
-📁 Structure du projet
+📁 Structure du dépôt
 Code
 .
 ├── app/                     # Application Flask
@@ -80,6 +50,28 @@ Code
 │
 ├── urls.txt
 └── README.md
+🏗️ Architecture du système
+Code
+                         ┌──────────────────────────┐
+                         │        Client Web         │
+                         └──────────────┬───────────┘
+                                        │
+                                        ▼
+                          ┌──────────────────────────┐
+                          │      Ingress Controller   │
+                          └──────────────┬───────────┘
+                                        │
+                                        ▼
+                         ┌──────────────────────────┐
+                         │   Service (ClusterIP)     │
+                         └──────────────┬───────────┘
+                                        │
+                                        ▼
+                         ┌──────────────────────────┐
+                         │ Deployment (Flask App)   │
+                         │   • Pods (replicas)      │
+                         │   • Rolling updates      │
+                         └──────────────────────────┘
 🐳 Docker
 🔨 Build
 Code
@@ -127,14 +119,14 @@ Scan Trivy (vulnérabilités)
 
 Archive du projet (flask-sample-app.tar)
 
+⚠️ GitHub signale que flask-sample-app.tar dépasse 50 MB.
+Ce n’est pas bloquant, mais GitHub recommande Git LFS.
+
 🌐 URLs demandées
 Code
 GitHub : https://github.com/ezekielhouab0828/msc-de1-distributed-systems-docker-k8s
 Docker Hub : https://hub.docker.com/r/<ton_user>/flask-sample-app
 Ingress local : http://localhost/
-🧪 Tests
-Code
-pytest
 📚 Technologies
 Python 3.10
 
